@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     int Uo;
     if (isNumber(argv[1]))
     {
-        Uo = atoi(argv[1]);  // on convertit le 1er argument entrée en ligne de commande dans une variable Uo 
+        Uo = atoi(argv[1]); // on convertit le 1er argument entrée en ligne de commande dans une variable Uo
     }
     else
     {
@@ -43,53 +43,47 @@ int main(int argc, char **argv)
 
     // ouverture du fichier passé en argument en mode écriture
     FILE *pFile = fopen(argv[2], "w");
-    if (pFile == NULL)  // verifie que le fichier c'est bien créé
+    if (pFile == NULL) // verifie que le fichier c'est bien créé
     {
         printf("Le fichier semble introuvable. Verifiez votre chemin relatif.");
         exit(1);
     }
-    fprintf(pFile, "n Un\n");      // écriture de l'en tete
-    fprintf(pFile, "0 %d\n", Uo);  // écriture du cas initial
+    fprintf(pFile, "n Un\n");     // écriture de l'en tete
+    fprintf(pFile, "0 %d\n", Uo); // écriture du cas initial
 
     // initiation des variables à calculer
     int Un = Uo;              // valeur de la suite au terme n
     int altimax = Uo;         // plus grand entier par lequel on passe
     int dureeVol = 0;         // nombre d'etapes avant d'arriver à 1
     int dureeAltitude = 0;    // nombre max de pts consécutifs ayant une valeur >Uo
-    int dureeAltitudeMax = 0; // servira à prendre la plus grande série de Durée en Altitude
-   
+    int IncrementationDureeAltitude = 1;  //incrémentation, permet d'avoir la plus grande série de durée en altitude
     // conjecture de syracuse
-    while (Un != 1)     // tant que Un different de 1
+    while (Un != 1) // tant que Un different de 1
     {
         if (Un % 2 == 0) // si Un est pair
-        { 
+        {
             Un = Un / 2;
         }
-        else            // si Un est impair
+        else // si Un est impair
         {
             Un = Un * 3 + 1;
         }
         dureeVol++;
-        fprintf(pFile, "%d %d\n", dureeVol, Un);  // écriture de l'étape n 
+        fprintf(pFile, "%d %d\n", dureeVol, Un); // écriture de l'étape n
 
         // Mis a jour de l'altitude max
         if (Un > altimax)
             altimax = Un;
 
         // Mis a jour duree en altitude
-        if (Un < Uo)    // fin de l'altitude donc reinitialisation de l'incrementation
-            dureeAltitude = 0;
+        if (Un < Uo)
+            IncrementationDureeAltitude = 0;
         if (Un > Uo)
-            dureeAltitude++; // on incrémente la série
-
-        // on la compare avec la plus grande série actuelle
-        if (dureeAltitude > dureeAltitudeMax)
-        {                                     
-            dureeAltitudeMax = dureeAltitude; // on prends la plus grande série
-        }
+            dureeAltitude += IncrementationDureeAltitude;
     }
+
     // écriture des variables à calculer , altitude max , durée de vol , durée en altitude
-    fprintf(pFile, "altimax=%d \ndureevol=%d \ndureealtitude=%d", altimax, dureeVol, dureeAltitudeMax);
+    fprintf(pFile, "altimax=%d \ndureevol=%d \ndureealtitude=%d", altimax, dureeVol, dureeAltitude);
     fclose(pFile); // fermeture du fichier
     return 0;
 }

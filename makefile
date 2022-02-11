@@ -1,5 +1,6 @@
 all:
 	gcc -Wall syracuse.c -o syracuse
+	@echo "Production de syracuse effectuée."
     
 clean: 
 	@echo "Nettoyage de syracuse"
